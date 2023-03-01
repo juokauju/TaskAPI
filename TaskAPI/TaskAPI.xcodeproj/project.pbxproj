@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C5B2B7729AF5820008DEBA5 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */; };
+		7C5B2B7929AF58BC008DEBA5 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */; };
 		7C9E49DA29AF39BE0012D9C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9E49D929AF39BE0012D9C1 /* AppDelegate.swift */; };
 		7C9E49DE29AF39BE0012D9C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9E49DD29AF39BE0012D9C1 /* ViewController.swift */; };
 		7C9E49E329AF39C50012D9C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C9E49E229AF39C50012D9C1 /* Assets.xcassets */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		7C9E49D629AF39BE0012D9C1 /* TaskAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C9E49D929AF39BE0012D9C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7C9E49DD29AF39BE0012D9C1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +45,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7C5B2B7A29AF59CF008DEBA5 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		7C5B2B7B29AFFA0E008DEBA5 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				7C9E49EE29AF3A310012D9C1 /* TaskAPIService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		7C5B2B7C29AFFB5E008DEBA5 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				7C9E49F529AF547C0012D9C1 /* LoginViewController.swift */,
+				7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		7C9E49CD29AF39BD0012D9C1 = {
 			isa = PBXGroup;
 			children = (
@@ -62,9 +91,11 @@
 			children = (
 				7C9E49D929AF39BE0012D9C1 /* AppDelegate.swift */,
 				7C9E49F529AF547C0012D9C1 /* LoginViewController.swift */,
-				7C9E49EE29AF3A310012D9C1 /* TaskAPIService.swift */,
+				7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */,
+				7C5B2B7B29AFFA0E008DEBA5 /* Service */,
 				7C9E49F229AF421B0012D9C1 /* Models */,
 				7C9E49DD29AF39BE0012D9C1 /* ViewController.swift */,
+				7C5B2B7A29AF59CF008DEBA5 /* Utils */,
 				7C9E49ED29AF3A0A0012D9C1 /* Files */,
 			);
 			path = TaskAPI;
@@ -160,6 +191,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C9E49F629AF547D0012D9C1 /* LoginViewController.swift in Sources */,
+				7C5B2B7729AF5820008DEBA5 /* TextFieldView.swift in Sources */,
+				7C5B2B7929AF58BC008DEBA5 /* PropertyWrappers.swift in Sources */,
 				7C9E49F129AF41FE0012D9C1 /* User.swift in Sources */,
 				7C9E49DE29AF39BE0012D9C1 /* ViewController.swift in Sources */,
 				7C9E49F429AF42440012D9C1 /* Task.swift in Sources */,

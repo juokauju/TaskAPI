@@ -8,8 +8,8 @@
 import Foundation
 
 struct UserAuthenticationRequest: Encodable {
-    let username: String?
-    let password: String?
+    let username: String
+    let password: String
 }
 
 struct UserAuthenticationResponse: Decodable {
