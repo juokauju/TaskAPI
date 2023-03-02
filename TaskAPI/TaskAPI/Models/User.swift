@@ -18,5 +18,5 @@ struct UserAuthenticationResponse: Decodable {
 
 struct UserInfo: Codable {
     let id: Int
-    let username: String?
+    let username: String
 }

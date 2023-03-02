@@ -17,7 +17,7 @@ struct TaskRequest: Encodable {
 struct TaskResponse: Decodable {
     let title: String?
     let description: String?
-    let estimateMintutes: Int
+    let estimateMintutes: Int?
     let loggedTime: Int
     let isDone: Bool
     let assigneeInfo: UserInfo

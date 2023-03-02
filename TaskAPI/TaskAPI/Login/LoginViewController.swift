@@ -7,20 +7,25 @@
 
 import UIKit
 
+protocol LoginViewControllerDelegate: NSObject {
+    func didLogin()
+}
+
 class LoginViewController: UIViewController {
+    
+    weak var delegate: LoginViewControllerDelegate?
+    
     @UsesAutoLayout private var label = UILabel()
     @UsesAutoLayout private var textFieldStackView = UIStackView()
-    @UsesAutoLayout
-    private var usernameTextField = TextFieldView(title: "Username", placeholder: "Enter username")
-    @UsesAutoLayout
-    private var passwordTextField = TextFieldView(title: "Password", placeholder: "Enter password")
-    @UsesAutoLayout private var logButton = UIButton()
     
+    private weak var usernameTextField: TextFieldView!
+    private weak var passwordTextField: TextFieldView!
+    @UsesAutoLayout private var logButton = UIButton()
     @UsesAutoLayout private var questionStackView = UIStackView()
     @UsesAutoLayout private var questionLabel = UILabel()
     @UsesAutoLayout private var changeViewButton = UIButton()
     
-    private var isScreenLogin = false
+    private var isScreenLogin = true
     
     private let service = TaskAPIService()
 
@@ -46,6 +51,11 @@ extension LoginViewController {
     }
     
     private func setupTextFieldStackView() {
+        @UsesAutoLayout var usernameTextField = TextFieldView(title: "Username", placeholder: "Enter username")
+        @UsesAutoLayout var passwordTextField = TextFieldView(title: "Password", placeholder: "Enter password")
+        self.usernameTextField = usernameTextField
+        self.passwordTextField = passwordTextField
+        
         textFieldStackView.axis = .vertical
         textFieldStackView.spacing = 15
         
@@ -125,6 +135,7 @@ extension LoginViewController {
         guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
         let user = UserAuthenticationRequest(username: username, password: password)
         loginOrRegister(for: user)
+        delegate?.didLogin()
     }
     
     @objc private func changeButtonTapped(_ sender: UIButton){
@@ -153,6 +164,8 @@ extension LoginViewController {
     private func save(userId: Int?, for username: String) {
         guard let userId = userId else { return }
         let userInfo = UserInfo(id: userId, username: username)
-        UserDefaults.standard.set(userInfo, forKey: "userInfo")
+        if let encode = try? JSONEncoder().encode(userInfo) {
+            UserDefaults.standard.set(encode, forKey: "userInfo")
+        }
     }
 }

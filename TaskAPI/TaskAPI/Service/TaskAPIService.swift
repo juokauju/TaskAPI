@@ -113,17 +113,18 @@ class TaskAPIService {
         }
     }
     
-    func getTasksForUser(id: Int, completion: @escaping ([TaskResponse]) -> Void) {
-        guard let url = resource.buildUrl(for: .task, id: id) else {
+    func getTasksForUser(id: Int, completion: @escaping ([TaskResponse?]) -> Void) {
+        guard let url = resource.buildUrl(for: .allUserTasks, id: id) else {
             print(NetworkError.url)
             completion([])
             return
         }
         Task {
             do {
+                print(url)
                 let data = try await load(url, method: .GET)
-                let result = try decoder.decode([TaskResponse].self, from: data)
-                completion(result)
+                let result = try decoder.decode(TasksResponse.self, from: data)
+                completion(result.tasks)
             } catch {
                 print("Error: \(error)")
             }
