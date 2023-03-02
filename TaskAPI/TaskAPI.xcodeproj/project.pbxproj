@@ -10,6 +10,8 @@
 		7C5B2B7729AF5820008DEBA5 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */; };
 		7C5B2B7929AF58BC008DEBA5 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */; };
 		7C5B2B7E29AFFB93008DEBA5 /* TasksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7D29AFFB93008DEBA5 /* TasksTableViewController.swift */; };
+		7C85E5CE29B1131C00C0646A /* DetailTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C85E5CD29B1131C00C0646A /* DetailTaskViewController.swift */; };
+		7C85E5D129B123F100C0646A /* StepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C85E5D029B123F100C0646A /* StepperTableViewCell.swift */; };
 		7C9E49DA29AF39BE0012D9C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9E49D929AF39BE0012D9C1 /* AppDelegate.swift */; };
 		7C9E49DE29AF39BE0012D9C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9E49DD29AF39BE0012D9C1 /* ViewController.swift */; };
 		7C9E49E329AF39C50012D9C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C9E49E229AF39C50012D9C1 /* Assets.xcassets */; };
@@ -23,6 +25,9 @@
 /* Begin PBXFileReference section */
 		7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
+		7C5B2B7D29AFFB93008DEBA5 /* TasksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksTableViewController.swift; sourceTree = "<group>"; };
+		7C85E5CD29B1131C00C0646A /* DetailTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTaskViewController.swift; sourceTree = "<group>"; };
+		7C85E5D029B123F100C0646A /* StepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperTableViewCell.swift; sourceTree = "<group>"; };
 		7C9E49D629AF39BE0012D9C1 /* TaskAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C9E49D929AF39BE0012D9C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7C9E49DD29AF39BE0012D9C1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +74,15 @@
 				7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		7C85E5CF29B123AD00C0646A /* DetailTaskView */ = {
+			isa = PBXGroup;
+			children = (
+				7C85E5CD29B1131C00C0646A /* DetailTaskViewController.swift */,
+				7C85E5D029B123F100C0646A /* StepperTableViewCell.swift */,
+			);
+			path = DetailTaskView;
 			sourceTree = "<group>";
 		};
 		7C9E49CD29AF39BD0012D9C1 = {
