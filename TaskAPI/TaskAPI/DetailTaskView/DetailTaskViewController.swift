@@ -9,6 +9,8 @@ import UIKit
 
 class DetailTaskViewController: UIViewController {
     @UsesAutoLayout private var tableView = UITableView()
+    @UsesAutoLayout private var updateButton = UIButton()
+    
     private let cellReuseId = "DetailViewCell"
     private let valueReuseId = ValueTableViewCell.reuseId
     private let stepperReuseId = StepperTableViewCell.reuseId
@@ -27,13 +29,13 @@ class DetailTaskViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        setupTableView()
+
     }
 }
 
 extension DetailTaskViewController {
     private func setup() {
-
+        setupTableView()
     }
     
     private func setupTableView() {
@@ -41,7 +43,7 @@ extension DetailTaskViewController {
         tableView.register(ValueTableViewCell.self, forCellReuseIdentifier: valueReuseId)
         tableView.register(StepperTableViewCell.self, forCellReuseIdentifier: stepperReuseId)
         tableView.dataSource = self
-//        tableView.delegate = self
+        tableView.delegate = self
         view.addSubview(tableView)
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
@@ -89,4 +91,8 @@ extension DetailTaskViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         5
     }
+}
+
+extension DetailTaskViewController: UITableViewDelegate {
+    
 }

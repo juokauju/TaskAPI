@@ -12,14 +12,24 @@ class TasksTableViewController: UIViewController {
     let service = TaskAPIService()
     var tasks: [TaskResponse?] = []
     
+    let test = [TaskResponse(title: "dfgf", description: "fdgf", estimateMinutes: 2, loggedTime: 1, isDone: false, assigneeInfo: UserInfo(id: 4, username: "dfg"))]
+    
     @UsesAutoLayout private var tableView = UITableView()
     
     private let cellReuseId = "TaskCellIdentifier"
 
+    override func loadView() {
+        super.loadView()
+        setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchTasks()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        fetchTasks()
+       
 //        fetchUserTasks()
     }
 }
@@ -36,6 +46,7 @@ extension TasksTableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.backgroundColor = .cyan
         addTableViewConstraints()
     }
     
@@ -46,7 +57,7 @@ extension TasksTableViewController {
             safeArea.topAnchor.constraint(equalTo: tableView.topAnchor),
             tableView.leftAnchor.constraint(equalTo: safeArea.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: safeArea.rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeArea.topAnchor)
         ])
     }
 }
@@ -55,7 +66,7 @@ extension TasksTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let task = tasks[indexPath.row] else { return UITableViewCell() }
         var cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath)
-        cell = configureCell(with: task)
+        cell = configureCell(with: test[0])
         return cell
     }
     
@@ -68,15 +79,21 @@ extension TasksTableViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(tasks.count)
-        return tasks.count
+        return test.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
     }
 }
 
 extension TasksTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-//        let task = tasks[indexPath.row]
+        
+        guard let task = tasks[indexPath.row] else { return }
+        let detailVC = DetailTaskViewController(task: task)
+        navigationController?.present(detailVC, animated: true)
     }
 }
 

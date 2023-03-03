@@ -15,7 +15,7 @@ class ValueTableViewCell: UITableViewCell {
     let valueLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseId)
+        super.init(style: style, reuseIdentifier: ValueTableViewCell.reuseId)
         
     }
     

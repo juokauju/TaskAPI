@@ -78,12 +78,20 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		7C819C5C29B21F8D00B1995A /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7C85E5D229B12C5500C0646A /* ValueTableViewCell.swift */,
+				7C85E5D029B123F100C0646A /* StepperTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		7C85E5CF29B123AD00C0646A /* DetailTaskView */ = {
 			isa = PBXGroup;
 			children = (
 				7C85E5CD29B1131C00C0646A /* DetailTaskViewController.swift */,
-				7C85E5D229B12C5500C0646A /* ValueTableViewCell.swift */,
-				7C85E5D029B123F100C0646A /* StepperTableViewCell.swift */,
+				7C819C5C29B21F8D00B1995A /* Cell */,
 			);
 			path = DetailTaskView;
 			sourceTree = "<group>";

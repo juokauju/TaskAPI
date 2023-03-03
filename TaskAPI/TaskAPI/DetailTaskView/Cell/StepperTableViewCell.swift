@@ -18,7 +18,7 @@ class StepperTableViewCell: UITableViewCell {
     var valueChangedHandler: ((Int) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseId)
+        super.init(style: style, reuseIdentifier: StepperTableViewCell.reuseId)
         setupView()
     }
     
