@@ -36,6 +36,13 @@ struct TasksResponse: Decodable {
     let tasks: [TaskResponse?]
 }
 
+struct RegisterTaskRequest: Encodable {
+    let title: String?
+    let description: String?
+    let estimateMinutes: Int
+    let assigneeId: Int
+}
+
 struct RegisterTaskResponse: Codable {
     let taskId: Int
 }
