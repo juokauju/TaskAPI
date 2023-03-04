@@ -28,9 +28,9 @@ struct TaskAPIResource {
 }
 
 enum NetworkError: Error {
-    case url
-    case response
-    case service
+    case badUrl
+    case httpRequestError
+    case networkFailure
 }
 
 class TaskAPIService {
@@ -58,32 +58,35 @@ class TaskAPIService {
     private func load(_ url: URL, method: HttpMethod, body: Data? = nil) async throws -> Data {
         let request = buildRequest(url, method: method, body: body)
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw NetworkError.response }
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw NetworkError.httpRequestError }
         return data
     }
     
-    func register(user: UserAuthenticationRequest, completion: @escaping (UserAuthenticationResponse?) -> Void) {
+    func register(user: UserAuthenticationRequest,
+                  completion: @escaping (Result<UserAuthenticationResponse, NetworkError>) -> Void) {
+        
         guard let url = resource.buildUrl(for: .registerUser) else {
-            print(NetworkError.url)
-            completion(nil)
+            completion(.failure(NetworkError.badUrl))
             return
         }
+        
         Task {
             do {
                 let data = try encoder.encode(user)
                 let responseData = try await load(url, method: .POST, body: data)
                 let response = try decoder.decode(UserAuthenticationResponse.self, from: responseData)
-                completion(response)
+                completion(.success(response))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func login(user: UserAuthenticationRequest, completion: @escaping (UserAuthenticationResponse?) -> Void) {
+    func login(user: UserAuthenticationRequest,
+               completion: @escaping (Result<UserAuthenticationResponse, NetworkError>) -> Void) {
+        
         guard let url = resource.buildUrl(for: .loginUser) else {
-            print(NetworkError.url)
-            completion(nil)
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
@@ -91,65 +94,64 @@ class TaskAPIService {
                 let data = try encoder.encode(user)
                 let responseData = try await load(url, method: .POST, body: data)
                 let response = try decoder.decode(UserAuthenticationResponse.self, from: responseData)
-                completion(response)
+                completion(.success(response))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func deleteUser(id: Int) {
+    func deleteUser(id: Int, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        
         guard let url = resource.buildUrl(for: .deleteUser, id: id) else {
-            print(NetworkError.url)
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
             do {
                 try await load(url, method: .DELETE)
+                completion(.success(true))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func getAllTasks(completion: @escaping ([TaskResponse]) -> Void) {
+    func getAllTasks(completion: @escaping (Result<[TaskResponse], NetworkError>) -> Void) {
         guard let url = resource.buildUrl(for: .task) else {
-            print(NetworkError.url)
-            completion([])
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
             do {
                 let data = try await load(url, method: .GET)
                 let result = try decoder.decode([TaskResponse].self, from: data)
-                completion(result)
+                completion(.success(result))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func getTasksForUser(id: Int, completion: @escaping ([TaskResponse?]) -> Void) {
+    func getTasksForUser(id: Int, completion: @escaping (Result<[TaskResponse?], NetworkError>) -> Void) {
         guard let url = resource.buildUrl(for: .allUserTasks, id: id) else {
-            print(NetworkError.url)
-            completion([])
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
             do {
                 let data = try await load(url, method: .GET)
                 let result = try decoder.decode(TasksResponse.self, from: data)
-                completion(result.tasks)
+                completion(.success(result.tasks))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func post(task: RegisterTaskRequest, completion: @escaping (RegisterTaskResponse?) -> Void) {
+    func post(task: RegisterTaskRequest, completion: @escaping (Result<RegisterTaskResponse, NetworkError>) -> Void) {
         guard let url = resource.buildUrl(for: .task) else {
-            print(NetworkError.url)
-            completion(nil)
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
@@ -157,17 +159,16 @@ class TaskAPIService {
                 let data = try encoder.encode(task)
                 let responseData = try await load(url, method: .POST, body: data)
                 let result = try decoder.decode(RegisterTaskResponse.self, from: responseData)
-                completion(result)
+                completion(.success(result))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
-    func update(with task: UpdateTaskRequest, completion: @escaping (RegisterTaskResponse?) -> Void) {
+    func update(with task: UpdateTaskRequest, completion: @escaping (Result<RegisterTaskResponse, NetworkError>) -> Void) {
         guard let url = resource.buildUrl(for: .task) else {
-            print(NetworkError.url)
-            completion(nil)
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
@@ -175,23 +176,22 @@ class TaskAPIService {
                 let data = try encoder.encode(task)
                 let responseData = try await load(url, method: .PUT, body: data)
                 let result = try decoder.decode(RegisterTaskResponse.self, from: responseData)
-                completion(result)
+                completion(.success(result))
             } catch {
-                print("Error: \(error)")
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }
     
     func deleteTask(id: Int) {
         guard let url = resource.buildUrl(for: .task, id: id) else {
-            print(NetworkError.url)
             return
         }
         Task {
             do {
                 try await load(url, method: .DELETE)
             } catch {
-                print("Error: \(error)")
+                print(error)
             }
         }
     }
