@@ -36,13 +36,13 @@ extension StepperTableViewCell {
         
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
             
             valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.rightAnchor.constraint(equalTo: stepper.leftAnchor, constant: -8),
+            valueLabel.rightAnchor.constraint(equalTo: stepper.leftAnchor, constant: -20),
             
             stepper.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stepper.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8)
+            stepper.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20)
         ])
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         

@@ -35,6 +35,7 @@ enum NetworkError: Error {
 
 class TaskAPIService {
     let resource = TaskAPIResource()
+    
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
     
@@ -121,7 +122,6 @@ class TaskAPIService {
         }
         Task {
             do {
-                print(url)
                 let data = try await load(url, method: .GET)
                 let result = try decoder.decode(TasksResponse.self, from: data)
                 completion(result.tasks)
@@ -130,6 +130,23 @@ class TaskAPIService {
             }
         }
     }
-
+    
+    func update(with task: UpdateTaskRequest, completion: @escaping (RegisterTaskResponse?) -> Void) {
+        guard let url = resource.buildUrl(for: .task) else {
+            print(NetworkError.url)
+            completion(nil)
+            return
+        }
+        Task {
+            do {
+                let data = try encoder.encode(task)
+                let responseData = try await load(url, method: .PUT, body: data)
+                let result = try decoder.decode(RegisterTaskResponse.self, from: responseData)
+                completion(result)
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+    }
 }
     

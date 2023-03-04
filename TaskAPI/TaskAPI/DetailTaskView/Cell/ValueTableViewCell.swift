@@ -11,12 +11,12 @@ class ValueTableViewCell: UITableViewCell {
     
     static let reuseId = "TextFieldTableViewCell"
     
-    let titleLabel = UILabel()
-    let valueLabel = UILabel()
+    @UsesAutoLayout private var titleLabel = UILabel()
+    @UsesAutoLayout private var valueLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: ValueTableViewCell.reuseId)
-        
+        setupView()
     }
     
     required init?(coder: NSCoder) {
@@ -31,10 +31,10 @@ extension ValueTableViewCell {
         
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
             
             valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8)
+            valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -40)
         ])
         valueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }

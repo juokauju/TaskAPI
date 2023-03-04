@@ -1,5 +1,5 @@
 //
-//  TasksTableViewController.swift
+//  TasksViewController.swift
 //  TaskAPI
 //
 //  Created by Justina Siaulyte on 2023-03-01.
@@ -7,34 +7,27 @@
 
 import UIKit
 
-class TasksTableViewController: UIViewController {
+class TasksViewController: UIViewController {
     
     let service = TaskAPIService()
     var tasks: [TaskResponse?] = []
     
-    let test = [TaskResponse(title: "dfgf", description: "fdgf", estimateMinutes: 2, loggedTime: 1, isDone: false, assigneeInfo: UserInfo(id: 4, username: "dfg"))]
-    
     @UsesAutoLayout private var tableView = UITableView()
     
     private let cellReuseId = "TaskCellIdentifier"
-
-    override func loadView() {
-        super.loadView()
-        setup()
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchTasks()
+        //        fetchUserTasks()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-//        fetchUserTasks()
+        setup()
     }
 }
 
-extension TasksTableViewController {
+extension TasksViewController {
     private func setup() {
         title = "Tasks"
         view.backgroundColor = .systemBackground
@@ -46,27 +39,28 @@ extension TasksTableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .cyan
+        tableView.backgroundColor = .systemFill
         addTableViewConstraints()
     }
     
     private func addTableViewConstraints() {
         view.addSubview(tableView)
-        let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            safeArea.topAnchor.constraint(equalTo: tableView.topAnchor),
-            tableView.leftAnchor.constraint(equalTo: safeArea.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: safeArea.rightAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeArea.topAnchor)
-        ])
+          tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+          tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+          tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+          tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+      ])
     }
 }
 
-extension TasksTableViewController: UITableViewDataSource {
+extension TasksViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let task = tasks[indexPath.row] else { return UITableViewCell() }
+        
         var cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath)
-        cell = configureCell(with: test[0])
+        cell = configureCell(with: task)
+        
         return cell
     }
     
@@ -74,31 +68,31 @@ extension TasksTableViewController: UITableViewDataSource {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellReuseId)
         cell.textLabel?.text = task.title
         cell.detailTextLabel?.text = task.description
+        cell.detailTextLabel?.textColor = .secondaryLabel
         cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return test.count
+        return tasks.count
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        1
-    }
 }
 
-extension TasksTableViewController: UITableViewDelegate {
+extension TasksViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let task = tasks[indexPath.row] else { return }
+        
         let detailVC = DetailTaskViewController(task: task)
-        navigationController?.present(detailVC, animated: true)
+        detailVC.delegate = self
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
 // MARK: - Networking
-extension TasksTableViewController {
+extension TasksViewController {
     func fetchUserTasks() {
         guard let userId = getUserId() else { return }
         service.getTasksForUser(id: userId) { tasks in
@@ -111,6 +105,7 @@ extension TasksTableViewController {
             let userInfo = try? JSONDecoder().decode(UserInfo.self, from: data)
             return userInfo?.id
         }
+        
         return nil
     }
     
@@ -124,4 +119,24 @@ extension TasksTableViewController {
         }
     }
     #endif
+}
+
+// MARK: - DetailTaskViewControllerDelegate
+extension TasksViewController: DetailTaskViewControllerDelegate {
+    func update(with task: TaskResponse) {
+        let updateTaskRequest = UpdateTaskRequest(title: task.title,
+                                                  description: task.description,
+                                                  estimateMinutes: task.estimateMinutes,
+                                                  assigneeId: task.assigneeInfo.id,
+                                                  loggedTime: task.loggedTime,
+                                                  isDone: task.isDone)
+        
+        service.update(with: updateTaskRequest) { taskId in
+            guard let taskId = taskId else {
+                return
+            }
+            
+            print(taskId)
+        }
+    }
 }
