@@ -7,13 +7,7 @@
 
 import UIKit
 
-protocol LoginViewControllerDelegate: NSObject {
-    func didLogin()
-}
-
 class LoginViewController: UIViewController {
-    
-    weak var delegate: LoginViewControllerDelegate?
     
     @UsesAutoLayout private var label = UILabel()
     @UsesAutoLayout private var textFieldStackView = UIStackView()
@@ -132,10 +126,11 @@ extension LoginViewController {
     }
     
     @objc private func logButtonTapped(_ sender: UIButton){
-        guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
-        let user = UserAuthenticationRequest(username: username, password: password)
-        loginOrRegister(for: user)
-        delegate?.didLogin()
+        createUserRequestAndLoginOrRegister()
+        let tabVC = MainTabBarController()
+        tabVC.modalPresentationStyle = .fullScreen
+        tabVC.modalTransitionStyle = .crossDissolve
+        present(tabVC, animated: true)
     }
     
     @objc private func changeButtonTapped(_ sender: UIButton){
@@ -143,29 +138,46 @@ extension LoginViewController {
         setTitlesLoginOrRegister()
     }
     
+    private func createUserRequestAndLoginOrRegister() {
+        guard let username = usernameTextField.text,
+              let password = passwordTextField.text
+        else { return }
+        let user = UserAuthenticationRequest(username: username,
+                                             password: password)
+        UserManager.username = username
+        loginOrRegister(for: user)
+    }
 }
 
 // MARK: - Networking
 extension LoginViewController {
     private func loginOrRegister(for user: UserAuthenticationRequest) {
         if isScreenLogin {
-            service.login(user: user) { [weak self] userResponse in
-                guard let self = self else { return }
-                self.save(userId: userResponse?.userId, for: user.username)
+            service.login(user: user) { result in
+                switch result {
+                case .success(let userResponse):
+                    UserManager.userId = userResponse.userId
+                case .failure(let error):
+                    print(error)
+                }
             }
         } else {
-            service.register(user: user) { [weak self] userResponse in
-                guard let self = self else { return }
-                self.save(userId: userResponse?.userId, for: user.username)
+            service.register(user: user) { result in
+                switch result {
+                case .success(let userResponse):
+                    UserManager.userId = userResponse.userId
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
     }
-    
-    private func save(userId: Int?, for username: String) {
-        guard let userId = userId else { return }
-        let userInfo = UserInfo(id: userId, username: username)
-        if let encode = try? JSONEncoder().encode(userInfo) {
-            UserDefaults.standard.set(encode, forKey: "userInfo")
-        }
-    }
+//
+//    private func saveInUserDefaults(userId: Int?, for username: String) {
+//        guard let userId = userId else { return }
+//        let userInfo = UserInfo(id: userId, username: username)
+//        if let encode = try? JSONEncoder().encode(userInfo) {
+//            UserDefaults.standard.set(encode, forKey: "userInfo")
+//        }
+//    }
 }

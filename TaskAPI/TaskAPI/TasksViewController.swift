@@ -16,15 +16,17 @@ class TasksViewController: UIViewController {
     
     private let cellReuseId = "TaskCellIdentifier"
     
-    override func viewWillAppear(_ animated: Bool) {
-        fetchTasks()
-        //        fetchUserTasks()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        fetchTasks()
+        //        fetchUserTasks()
+    }
+    
 }
 
 extension TasksViewController {
@@ -33,6 +35,7 @@ extension TasksViewController {
         view.backgroundColor = .systemBackground
         
         setupTableView()
+        setupAddNavigationBarItem()
     }
     
     private func setupTableView() {
@@ -51,6 +54,16 @@ extension TasksViewController {
           tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
           tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
       ])
+    }
+    
+    func setupAddNavigationBarItem() {
+        let iconImage = UIImage(systemName: "plus.square")
+        let addBarItem = UIBarButtonItem(image: iconImage, style: .plain, target: self, action: #selector(addBarButtonTapped))
+        navigationItem.rightBarButtonItem = addBarItem
+    }
+    
+    @objc private func addBarButtonTapped(_ sender: UIBarButtonItem) {
+        print("yey")
     }
 }
 
@@ -95,8 +108,14 @@ extension TasksViewController: UITableViewDelegate {
 extension TasksViewController {
     func fetchUserTasks() {
         guard let userId = getUserId() else { return }
-        service.getTasksForUser(id: userId) { tasks in
-            self.tasks = tasks
+        service.getTasksForUser(id: userId) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let tasks):
+                self.tasks = tasks
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     
@@ -111,8 +130,14 @@ extension TasksViewController {
     
     #if DEBUG
     func fetchTasks() {
-        service.getTasksForUser(id: 83) { tasks in
-            self.tasks = tasks
+        service.getTasksForUser(id: 83) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let tasks):
+                self.tasks = tasks
+            case .failure(let error):
+                print(error)
+            }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -123,20 +148,23 @@ extension TasksViewController {
 
 // MARK: - DetailTaskViewControllerDelegate
 extension TasksViewController: DetailTaskViewControllerDelegate {
-    func update(with task: TaskResponse) {
-        let updateTaskRequest = UpdateTaskRequest(title: task.title,
-                                                  description: task.description,
-                                                  estimateMinutes: task.estimateMinutes,
-                                                  assigneeId: task.assigneeInfo.id,
-                                                  loggedTime: task.loggedTime,
-                                                  isDone: task.isDone)
-        
-        service.update(with: updateTaskRequest) { taskId in
-            guard let taskId = taskId else {
-                return
-            }
-            
-            print(taskId)
-        }
+    func update(with task: TaskResponse) -> NetworkError? {
+//        let updateTaskRequest = UpdateTaskRequest(title: task.title,
+//                                                  description: task.description,
+//                                                  estimateMinutes: task.estimateMinutes,
+//                                                  assigneeId: task.assigneeInfo.id,
+//                                                  loggedTime: task.loggedTime,
+//                                                  isDone: task.isDone)
+//
+//        service.update(with: updateTaskRequest) { result in
+//            switch result {
+//            case .success(let taskId):
+//                print(taskId)
+//                return nil
+//            case.failure(let error):
+//                return error
+//            }
+//        }
+        return nil
     }
 }
