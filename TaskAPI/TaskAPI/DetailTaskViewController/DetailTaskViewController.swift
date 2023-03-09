@@ -8,7 +8,7 @@
 import UIKit
 
 protocol DetailTaskViewControllerDelegate: NSObject {
-    func update(with task: TaskResponse)
+    func update(with task: TaskResponse) -> NetworkError?
 }
 
 class DetailTaskViewController: UIViewController {
@@ -16,6 +16,7 @@ class DetailTaskViewController: UIViewController {
     
     @UsesAutoLayout private var tableView = UITableView()
     @UsesAutoLayout private var updateButton = UIButton()
+    private var footerView = UIView()
     
     private let cellReuseId = "DetailViewCell"
     private let valueReuseId = ValueTableViewCell.reuseId
@@ -36,6 +37,19 @@ class DetailTaskViewController: UIViewController {
         super.viewDidLoad()
         setup()
 
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+          guard let footerView = self.tableView.tableFooterView else {
+            return
+          }
+          let width = self.tableView.bounds.size.width
+          let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
+          if footerView.frame.size.height != size.height {
+            footerView.frame.size.height = size.height
+            self.tableView.tableFooterView = footerView
+          }
     }
 }
 
@@ -68,26 +82,27 @@ extension DetailTaskViewController {
     
     private func setupUpdateButton() {
         var config = UIButton.Configuration.filled()
+        config.title = "Update"
         config.titleAlignment = .center
         config.titlePadding = 20
         config.buttonSize = .large
         config.baseBackgroundColor = .black
         config.cornerStyle = .large
         updateButton.configuration = config
-    
         updateButton.addTarget(self, action: #selector(updateButtonTapped), for: .primaryActionTriggered)
-        view.addSubview(updateButton)
-        NSLayoutConstraint.activate([
-            updateButton.topAnchor.constraint(equalToSystemSpacingBelow: tableView.bottomAnchor, multiplier: 4),
-            updateButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20),
-            updateButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -20)
-        ])
     }
     
+    
     @objc private func updateButtonTapped(_ sender: UIButton) {
-        delegate?.update(with: task)
-        // update service
-        // go back to parent view
+       let error = delegate?.update(with: task)
+        if error != nil {
+            showAlert()
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func showAlert() {
+        
     }
 }
 
@@ -137,5 +152,25 @@ extension DetailTaskViewController: UITableViewDataSource {
 }
 
 extension DetailTaskViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+       return 100
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = nil
+        setupUpdateButton()
+        footerView.addSubview(updateButton)
+        NSLayoutConstraint.activate([
+            updateButton.topAnchor.constraint(equalToSystemSpacingBelow: footerView.topAnchor, multiplier: 3),
+            updateButton.leftAnchor.constraint(equalTo: footerView.leftAnchor, constant: 20),
+            updateButton.rightAnchor.constraint(equalTo: footerView.rightAnchor, constant: -20),
+        ])
+    
+        return footerView
+    }
 }
