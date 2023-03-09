@@ -125,59 +125,89 @@ extension LoginViewController {
         }
     }
     
-    @objc private func logButtonTapped(_ sender: UIButton){
-        createUserRequestAndLoginOrRegister()
-        let tabVC = MainTabBarController()
-        tabVC.modalPresentationStyle = .fullScreen
-        tabVC.modalTransitionStyle = .crossDissolve
-        present(tabVC, animated: true)
-    }
-    
     @objc private func changeButtonTapped(_ sender: UIButton){
         isScreenLogin.toggle()
         setTitlesLoginOrRegister()
     }
     
-    private func createUserRequestAndLoginOrRegister() {
-        guard let username = usernameTextField.text,
-              let password = passwordTextField.text
-        else { return }
-        let user = UserAuthenticationRequest(username: username,
-                                             password: password)
-        UserManager.username = username
-        loginOrRegister(for: user)
+    @objc private func logButtonTapped(_ sender: UIButton) {
+        loginOrRegister()
     }
 }
+
+extension LoginViewController {
+    private func loginOrRegister() {
+        guard let user = createUserAuthenticationRequest() else { return }
+        UserManager.username = user.username
+        loginOrRegister(for: user)
+    }
+    
+    private func createUserAuthenticationRequest() -> UserAuthenticationRequest? {
+        guard let username = usernameTextField.text,
+              let password = passwordTextField.text
+        else { return nil }
+        let user = UserAuthenticationRequest(username: username,
+                                             password: password)
+        return user
+    }
+}
+
 
 // MARK: - Networking
 extension LoginViewController {
     private func loginOrRegister(for user: UserAuthenticationRequest) {
         if isScreenLogin {
-            service.login(user: user) { result in
-                switch result {
-                case .success(let userResponse):
-                    UserManager.userId = userResponse.userId
-                case .failure(let error):
-                    print(error)
-                }
-            }
+            login(user)
         } else {
-            service.register(user: user) { result in
-                switch result {
-                case .success(let userResponse):
-                    UserManager.userId = userResponse.userId
-                case .failure(let error):
-                    print(error)
-                }
+            register(user)
+        }
+    }
+    
+    private func login(_ user: UserAuthenticationRequest) {
+        TaskAPIService().login(user: user) { [weak self] result in
+            switch result {
+            case .success(let userResponse):
+                self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
+                                                username: user.username)
+                UserManager.userId = userResponse.userId
+                self?.moveToMainViewController()
+            case .failure(let error):
+                print("Error fetching from login: \(error)")
+                // show alert
             }
         }
     }
-//
-//    private func saveInUserDefaults(userId: Int?, for username: String) {
-//        guard let userId = userId else { return }
-//        let userInfo = UserInfo(id: userId, username: username)
-//        if let encode = try? JSONEncoder().encode(userInfo) {
-//            UserDefaults.standard.set(encode, forKey: "userInfo")
-//        }
-//    }
+    
+    private func register(_ user: UserAuthenticationRequest) {
+        service.register(user: user) { [weak self] result in
+            switch result {
+            case .success(let userResponse):
+                self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
+                                                 username: user.username)
+                UserManager.userId = userResponse.userId
+                self?.moveToMainViewController()
+            case .failure(let error):
+                print("Error fetching from register: \(error)")
+                // show alert
+            }
+        }
+    }
+    
+    private func moveToMainViewController() {
+        DispatchQueue.main.async {
+            let tabVC = MainTabBarController()
+            tabVC.modalPresentationStyle = .fullScreen
+            tabVC.modalTransitionStyle = .crossDissolve
+            self.present(tabVC, animated: true)
+        }
+    }
+
+    private func saveUserInfoInUserDefaults(userId: Int?, username: String) {
+        guard let userId = userId else { return }
+        let userInfo = UserInfo(id: userId, username: username)
+        if let encode = try? JSONEncoder().encode(userInfo) {
+            UserDefaults.standard.set(encode, forKey: "userInfo")
+        }
+    }
 }
+
