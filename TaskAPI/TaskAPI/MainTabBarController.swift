@@ -16,7 +16,7 @@ class MainTabBarController: UITabBarController {
     }
 
     private func styleTabBar() {
-        tabBar.backgroundColor = .systemFill
+        tabBar.backgroundColor = .tertiarySystemGroupedBackground
     }
     
     private func setupViewControllers() {
@@ -28,7 +28,6 @@ class MainTabBarController: UITabBarController {
     private func setTasksNavigationController() -> UINavigationController {
         let tasksVC = TasksViewController()
         let tasksNC = UINavigationController(rootViewController: tasksVC)
-        tasksNC.title = "Tasks"
         tasksNC.tabBarItem.image = UIImage(systemName: "newspaper")
         tasksNC.tabBarItem.selectedImage = UIImage(systemName: "newspaper.fill")
         return tasksNC
@@ -37,7 +36,6 @@ class MainTabBarController: UITabBarController {
     private func setUserNavigationController() -> UINavigationController {
         let userVC = UserViewController()
         let userNC = UINavigationController(rootViewController: userVC)
-        userNC.title = "User"
         userNC.tabBarItem.image = UIImage(systemName: "person")
         userNC.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
         return userNC
