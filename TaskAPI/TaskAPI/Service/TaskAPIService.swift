@@ -149,7 +149,7 @@ class TaskAPIService {
         }
     }
     
-    func post(task: RegisterTaskRequest, completion: @escaping (Result<RegisterTaskResponse, NetworkError>) -> Void) {
+    func post(task: TaskRequest, completion: @escaping (Result<RegisterTaskResponse, NetworkError>) -> Void) {
         guard let url = resource.buildUrl(for: .task) else {
             completion(.failure(NetworkError.badUrl))
             return
