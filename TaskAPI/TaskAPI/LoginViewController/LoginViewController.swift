@@ -20,8 +20,6 @@ class LoginViewController: UIViewController {
     @UsesAutoLayout private var changeViewButton = UIButton()
     
     private var isScreenLogin = true
-    
-    private let service = TaskAPIService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,13 +171,13 @@ extension LoginViewController {
                 self?.moveToMainViewController()
             case .failure(let error):
                 print("Error fetching from login: \(error)")
-                // show alert
+                self?.showLoginErrorAlert()
             }
         }
     }
     
     private func register(_ user: UserAuthenticationRequest) {
-        service.register(user: user) { [weak self] result in
+        TaskAPIService().register(user: user) { [weak self] result in
             switch result {
             case .success(let userResponse):
                 self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
@@ -188,7 +186,7 @@ extension LoginViewController {
                 self?.moveToMainViewController()
             case .failure(let error):
                 print("Error fetching from register: \(error)")
-                // show alert
+                self?.showErrorAlert()
             }
         }
     }
@@ -201,13 +199,23 @@ extension LoginViewController {
             self.present(tabVC, animated: true)
         }
     }
-
+    
     private func saveUserInfoInUserDefaults(userId: Int?, username: String) {
         guard let userId = userId else { return }
         let userInfo = UserInfo(id: userId, username: username)
         if let encode = try? JSONEncoder().encode(userInfo) {
             UserDefaults.standard.set(encode, forKey: "userInfo")
         }
+    }
+    
+    private func showLoginErrorAlert() {
+        let alert = AlertBuilder(viewController: self, title: "Invalid login!", message: "User credentials are incorrect. Please try again or register", messageTwo: nil, messageThree: nil)
+        alert.showAlertWithOKAction(action: nil)
+    }
+    
+    private func showErrorAlert() {
+        let alert = AlertBuilder(viewController: self, title: "Error!", message: "Backend error presented", messageTwo: nil, messageThree: nil)
+        alert.showAlertWithOKAction(action: nil)
     }
 }
 

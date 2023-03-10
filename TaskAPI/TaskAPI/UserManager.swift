@@ -8,14 +8,11 @@
 import Foundation
 
 class UserManager {
-    static var userId: Int? {
-        didSet {
-            print(userId)
-        }
-    }
-    static var username: String? {
-        didSet {
-            print(username)
-        }
+    static var userId: Int?
+    static var username: String?
+    
+    static var userInfo: UserInfo? {
+        guard let userId = userId, let username = username else { return nil }
+        return UserInfo(id: userId, username: username)
     }
 }

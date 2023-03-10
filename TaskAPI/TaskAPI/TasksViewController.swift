@@ -14,6 +14,12 @@ class TasksViewController: UIViewController {
         }
     }
     
+    private var newTask: TaskResponse? {
+        didSet {
+            postNewTask()
+        }
+    }
+    
     @UsesAutoLayout private var tableView = UITableView()
     
     private let cellReuseId = "TaskCellIdentifier"
@@ -29,6 +35,7 @@ class TasksViewController: UIViewController {
     }
 }
 
+// MARK: - Setup view
 extension TasksViewController {
     private func setup() {
         title = "Tasks"
@@ -69,10 +76,6 @@ extension TasksViewController {
         let addBarItem = UIBarButtonItem(image: iconImage, style: .plain, target: self, action: #selector(addBarButtonTapped))
         navigationItem.rightBarButtonItem = addBarItem
     }
-    
-    @objc private func addBarButtonTapped(_ sender: UIBarButtonItem) {
-        print("yey")
-    }
 }
 
 extension TasksViewController: UITableViewDataSource {
@@ -112,14 +115,21 @@ extension TasksViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - Actions
+extension TasksViewController {
+    @objc private func addBarButtonTapped(_ sender: UIBarButtonItem) {
+        showAddNewTaskAlert()
+    }
+}
+
 // MARK: - Networking
 extension TasksViewController {
     func fetchUserTasks() {
-        guard let userId = UserManager.userId
-        else {
+        guard let userId = UserManager.userId else {
             print("no userid")
             return
         }
+        
         TaskAPIService().getTasksForUser(id: userId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -128,6 +138,28 @@ extension TasksViewController {
                     print(tasks)
                 case .failure(let error):
                     print(error)
+                    self?.showErrorAlert()
+                }
+            }
+        }
+    }
+    
+    func postNewTask() {
+        guard let newTask = newTask else { return }
+        let taskRequest = TaskRequest(title: newTask.title,
+                                      description: newTask.description,
+                                      estimateMinutes: newTask.estimateMinutes,
+                                      assigneeId: newTask.assigneeInfo.id)
+        
+        TaskAPIService().post(task: taskRequest) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let taskResponse):
+                    self?.newTask?.id = taskResponse.taskId
+                    self?.tasks?.append(newTask)
+                case .failure(let error):
+                    print(error)
+                    self?.showErrorAlert()
                 }
             }
         }
@@ -139,6 +171,40 @@ extension TasksViewController {
             return userInfo?.id
         }
         return nil
+    }
+}
+
+// MARK: - Alerts
+extension TasksViewController {
+    private func showErrorAlert() {
+        let alert = AlertBuilder(viewController: self,
+                                 title: "Error!",
+                                 message: "Backend error presented",
+                                 messageTwo: nil,
+                                 messageThree: nil)
+        alert.showAlertWithOKAction(action: nil)
+    }
+    
+    private func showAddNewTaskAlert() {
+        let alert = AlertBuilder(viewController: self,
+                                 title: "Add a task",
+                                 message: "Title",
+                                 messageTwo: "Description",
+                                 messageThree: "Estimate minutes")
+        alert.showThreeTextFieldAlerts { [weak self] array in
+            self?.createNewTaskFrom(array: array)
+        }
+    }
+    
+    private func createNewTaskFrom(array: [String]) {
+        let title = array[0]
+        let description = array[1]
+        let minutes = Int(array[2])
+        
+        guard let minutes = minutes,
+              let userInfo = UserManager.userInfo else { return }
+        let task = TaskResponse(id: nil, title: title, description: description, estimateMinutes: minutes, loggedTime: 0, isDone: false, assigneeInfo: userInfo)
+        newTask = task
     }
 }
 
