@@ -163,41 +163,44 @@ extension LoginViewController {
     
     private func login(_ user: UserAuthenticationRequest) {
         TaskAPIService().login(user: user) { [weak self] result in
-            switch result {
-            case .success(let userResponse):
-                self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
-                                                username: user.username)
-                UserManager.userId = userResponse.userId
-                self?.moveToMainViewController()
-            case .failure(let error):
-                print("Error fetching from login: \(error)")
-                self?.showLoginErrorAlert()
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let userResponse):
+                    self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
+                                                     username: user.username)
+                    UserManager.userId = userResponse.userId
+                    self?.moveToMainViewController()
+                case .failure(let error):
+                    print("Error fetching from login: \(error)")
+                    self?.showLoginErrorAlert()
+                }
             }
         }
     }
     
     private func register(_ user: UserAuthenticationRequest) {
         TaskAPIService().register(user: user) { [weak self] result in
-            switch result {
-            case .success(let userResponse):
-                self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
-                                                 username: user.username)
-                UserManager.userId = userResponse.userId
-                self?.moveToMainViewController()
-            case .failure(let error):
-                print("Error fetching from register: \(error)")
-                self?.showErrorAlert()
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let userResponse):
+                    self?.saveUserInfoInUserDefaults(userId: userResponse.userId,
+                                                     username: user.username)
+                    UserManager.userId = userResponse.userId
+                    self?.moveToMainViewController()
+                case .failure(let error):
+                    print("Error fetching from register: \(error)")
+                    self?.showErrorAlert()
+                }
             }
         }
     }
-    
+
+
     private func moveToMainViewController() {
-        DispatchQueue.main.async {
-            let tabVC = MainTabBarController()
-            tabVC.modalPresentationStyle = .fullScreen
-            tabVC.modalTransitionStyle = .crossDissolve
+        let tabVC = MainTabBarController()
+        tabVC.modalPresentationStyle = .fullScreen
+        tabVC.modalTransitionStyle = .crossDissolve
             self.present(tabVC, animated: true)
-        }
     }
     
     private func saveUserInfoInUserDefaults(userId: Int?, username: String) {
@@ -210,12 +213,12 @@ extension LoginViewController {
     
     private func showLoginErrorAlert() {
         let alert = AlertBuilder(viewController: self, title: "Invalid login!", message: "User credentials are incorrect. Please try again or register", messageTwo: nil, messageThree: nil)
-        alert.showAlertWithOKAction(action: nil)
+        alert.showAlertWithOK(action: nil)
     }
     
     private func showErrorAlert() {
         let alert = AlertBuilder(viewController: self, title: "Error!", message: "Backend error presented", messageTwo: nil, messageThree: nil)
-        alert.showAlertWithOKAction(action: nil)
+        alert.showAlertWithOK(action: nil)
     }
 }
 

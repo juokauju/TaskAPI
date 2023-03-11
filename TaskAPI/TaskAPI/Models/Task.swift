@@ -8,8 +8,8 @@
 import Foundation
 
 struct TaskRequest: Encodable {
-    let title: String?
-    let description: String?
+    let title: String
+    let description: String
     let estimateMinutes: Int
     let assigneeId: Int
 }

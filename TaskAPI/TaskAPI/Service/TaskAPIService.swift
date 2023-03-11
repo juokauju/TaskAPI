@@ -14,8 +14,8 @@ struct TaskAPIResource {
         case loginUser = "/api/user/login"
         case registerUser = "/api/user/register"
         case deleteUser = "/api/user/" // + userId
-        case allUserTasks = "/api/task/userTasks?userId=" // +userId
-        case task = "api/Task/" // + taskId for delete and get specific task
+        case allUserTasks = "/api/task/userTasks?userId=" // + userId
+        case task = "/api/Task/" // + taskId for delete and get specific task
     }
     
     func buildUrl(for endpoint: Endpoint, id: Int? = nil) -> URL? {
@@ -102,7 +102,6 @@ class TaskAPIService {
     }
     
     func deleteUser(id: Int, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
-        
         guard let url = resource.buildUrl(for: .deleteUser, id: id) else {
             completion(.failure(NetworkError.badUrl))
             return
@@ -183,15 +182,17 @@ class TaskAPIService {
         }
     }
     
-    func deleteTask(id: Int) {
-        guard let url = resource.buildUrl(for: .task, id: id) else {
+    func deleteTask(withId: Int, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        guard let url = resource.buildUrl(for: .task, id: withId) else {
+            completion(.failure(NetworkError.badUrl))
             return
         }
         Task {
             do {
                 try await load(url, method: .DELETE)
+                completion(.success(true))
             } catch {
-                print(error)
+                completion(.failure(NetworkError.networkFailure))
             }
         }
     }

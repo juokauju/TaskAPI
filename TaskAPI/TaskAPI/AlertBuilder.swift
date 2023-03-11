@@ -16,7 +16,7 @@ struct AlertBuilder {
     let messageThree: String? 
 
     
-    func showAlertWithOKAction(action: (() -> Void)?) {
+    func showAlertWithOK(action: (() -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if let action = action {
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
@@ -92,19 +92,11 @@ struct AlertBuilder {
             array.append(text)
             
             action(array)
-            showSuccessTaskCompletedAlert()
         }
         alert.addAction(doneAction)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
-        viewController.present(alert, animated: true)
-    }
-    
-    private func showSuccessTaskCompletedAlert() {
-        let alert = UIAlertController(title: "Success!", message: "Task completed", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-        
         viewController.present(alert, animated: true)
     }
 }

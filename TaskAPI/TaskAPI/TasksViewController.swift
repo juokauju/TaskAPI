@@ -14,11 +14,7 @@ class TasksViewController: UIViewController {
         }
     }
     
-    private var newTask: TaskResponse? {
-        didSet {
-            postNewTask()
-        }
-    }
+    private var newTask: TaskResponse?
     
     @UsesAutoLayout private var tableView = UITableView()
     
@@ -78,6 +74,7 @@ extension TasksViewController {
     }
 }
 
+// MARK: - TableView Data Source
 extension TasksViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let task = tasks?[indexPath.row] else { return UITableViewCell() }
@@ -103,6 +100,7 @@ extension TasksViewController: UITableViewDataSource {
     
 }
 
+// MARK: - TableView Delegate
 extension TasksViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -112,6 +110,17 @@ extension TasksViewController: UITableViewDelegate {
         let detailVC = DetailTaskViewController(task: task)
         detailVC.delegate = self
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            guard let id = tasks?[indexPath.row]?.id else { return }
+            deleteTask(withId: id) { [weak self] deleted in
+                if deleted {
+                    self?.tasks?.remove(at: indexPath.row)
+                }
+            }
+        }
     }
 }
 
@@ -124,7 +133,7 @@ extension TasksViewController {
 
 // MARK: - Networking
 extension TasksViewController {
-    func fetchUserTasks() {
+    private func fetchUserTasks() {
         guard let userId = UserManager.userId else {
             print("no userid")
             return
@@ -144,10 +153,10 @@ extension TasksViewController {
         }
     }
     
-    func postNewTask() {
+    private func postNewTask() {
         guard let newTask = newTask else { return }
-        let taskRequest = TaskRequest(title: newTask.title,
-                                      description: newTask.description,
+        let taskRequest = TaskRequest(title: newTask.title ?? "new task",
+                                      description: newTask.description ?? "description",
                                       estimateMinutes: newTask.estimateMinutes,
                                       assigneeId: newTask.assigneeInfo.id)
         
@@ -160,6 +169,20 @@ extension TasksViewController {
                 case .failure(let error):
                     print(error)
                     self?.showErrorAlert()
+                }
+            }
+        }
+    }
+    
+    private func deleteTask(withId: Int, completion: @escaping (Bool) -> Void) {
+        TaskAPIService().deleteTask(withId: withId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    completion(true)
+                case .failure(_):
+                    self?.showErrorAlert()
+                    completion(false)
                 }
             }
         }
@@ -182,7 +205,7 @@ extension TasksViewController {
                                  message: "Backend error presented",
                                  messageTwo: nil,
                                  messageThree: nil)
-        alert.showAlertWithOKAction(action: nil)
+        alert.showAlertWithOK(action: nil)
     }
     
     private func showAddNewTaskAlert() {
@@ -193,7 +216,18 @@ extension TasksViewController {
                                  messageThree: "Estimate minutes")
         alert.showThreeTextFieldAlerts { [weak self] array in
             self?.createNewTaskFrom(array: array)
+            self?.postNewTask()
+            self?.showSuccessAlert()
         }
+    }
+    
+    private func showSuccessAlert() {
+        let alert = AlertBuilder(viewController: self,
+                                 title: "Success!",
+                                 message: "Task completed",
+                                 messageTwo: nil,
+                                 messageThree: nil)
+        alert.showAlertWithOK(action: nil)
     }
     
     private func createNewTaskFrom(array: [String]) {
