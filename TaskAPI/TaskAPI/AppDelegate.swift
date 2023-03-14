@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.backgroundColor = .systemBackground
-//        let vc = UserViewController()
-//
-//        let nc = UINavigationController(rootViewController: vc)
-//        window?.rootViewController = nc
-        window?.rootViewController = LoginViewController()
+        let vc = DetailViewController()
+
+        let nc = UINavigationController(rootViewController: vc)
+        window?.rootViewController = nc
+//        window?.rootViewController = LoginViewController()
         
         return true
     }

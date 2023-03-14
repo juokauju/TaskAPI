@@ -43,8 +43,8 @@ extension LoginViewController {
     }
     
     private func setupTextFieldStackView() {
-        @UsesAutoLayout var usernameTextField = TextFieldView(title: "Username", placeholder: "Enter username")
-        @UsesAutoLayout var passwordTextField = TextFieldView(title: "Password", placeholder: "Enter password")
+        @UsesAutoLayout var usernameTextField = TextFieldView(title: "Username:", placeholder: "Enter username")
+        @UsesAutoLayout var passwordTextField = TextFieldView(title: "Password:", placeholder: "Enter password")
         self.usernameTextField = usernameTextField
         self.passwordTextField = passwordTextField
         

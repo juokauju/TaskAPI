@@ -8,16 +8,25 @@
 import UIKit
 
 class TextFieldView: UIView {
-    @UsesAutoLayout private var label = UILabel()
-    @UsesAutoLayout private var textField = UITextField()
+    @UsesAutoLayout var label = UILabel()
+    @UsesAutoLayout var textField = UITextField()
     
     var text: String? {
         get { return textField.text }
         set { textField.text = newValue }
     }
     
+    var spaceBetweenLabelAndTextField: CGFloat? {
+        didSet {
+            NSLayoutConstraint.deactivate(textFieldConstraints)
+            setupTextField()
+        }
+    }
+    
     let title: String
     let placeholder: String
+    
+    private var textFieldConstraints = [NSLayoutConstraint]()
 
     init(title: String, placeholder: String) {
         self.title = title
@@ -43,7 +52,7 @@ extension TextFieldView {
     }
     
     private func setupLabel() {
-        label.text = "\(title):"
+        label.text = title
         
         addSubview(label)
         NSLayoutConstraint.activate([
@@ -62,11 +71,12 @@ extension TextFieldView {
         textField.delegate = self
         
         addSubview(textField)
-        NSLayoutConstraint.activate([
+        textFieldConstraints = [
             textField.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-            textField.leftAnchor.constraint(equalTo: label.rightAnchor, constant: 8),
+            textField.leftAnchor.constraint(equalTo: label.rightAnchor, constant: spaceBetweenLabelAndTextField ?? 8),
             textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
-        ])
+        ]
+        NSLayoutConstraint.activate(textFieldConstraints)
     }
 }
 

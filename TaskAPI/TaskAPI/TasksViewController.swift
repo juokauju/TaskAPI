@@ -35,7 +35,7 @@ class TasksViewController: UIViewController {
 extension TasksViewController {
     private func setup() {
         title = "Tasks"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemBackground
         
         setupTableView()
         setupNavigationBar()
@@ -61,7 +61,7 @@ extension TasksViewController {
     
     private func setupNavigationBar() {
         let scrollEdgeAppearance = UINavigationBarAppearance()
-        scrollEdgeAppearance.backgroundColor = .systemFill
+        scrollEdgeAppearance.backgroundColor = .lightText
         
         navigationController?.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
         setupAddNavigationBarItem()

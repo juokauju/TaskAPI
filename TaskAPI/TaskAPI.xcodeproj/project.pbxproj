@@ -10,6 +10,8 @@
 		7C5B2B7729AF5820008DEBA5 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */; };
 		7C5B2B7929AF58BC008DEBA5 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */; };
 		7C5B2B7E29AFFB93008DEBA5 /* TasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B2B7D29AFFB93008DEBA5 /* TasksViewController.swift */; };
+		7C7D540D29BE04F000E23106 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7D540C29BE04F000E23106 /* DetailViewController.swift */; };
+		7C7D541329BE087F00E23106 /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7D541229BE087F00E23106 /* StepperView.swift */; };
 		7C81457829B60E4B00E1B856 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81457729B60E4B00E1B856 /* UserViewController.swift */; };
 		7C81457A29B6180300E1B856 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81457929B6180200E1B856 /* UserManager.swift */; };
 		7C81457F29B6313D00E1B856 /* UserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C81457E29B6313D00E1B856 /* UserViewController.xib */; };
@@ -31,6 +33,8 @@
 		7C5B2B7629AF5820008DEBA5 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		7C5B2B7829AF58BC008DEBA5 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		7C5B2B7D29AFFB93008DEBA5 /* TasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksViewController.swift; sourceTree = "<group>"; };
+		7C7D540C29BE04F000E23106 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		7C7D541229BE087F00E23106 /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		7C81457729B60E4B00E1B856 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		7C81457929B6180200E1B856 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		7C81457E29B6313D00E1B856 /* UserViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserViewController.xib; sourceTree = "<group>"; };
@@ -109,6 +113,8 @@
 			children = (
 				7C85E5CD29B1131C00C0646A /* DetailTaskViewController.swift */,
 				7C819C5C29B21F8D00B1995A /* Cell */,
+				7C7D540C29BE04F000E23106 /* DetailViewController.swift */,
+				7C7D541229BE087F00E23106 /* StepperView.swift */,
 			);
 			path = DetailTaskViewController;
 			sourceTree = "<group>";
@@ -242,9 +248,11 @@
 				7C9E49F629AF547D0012D9C1 /* LoginViewController.swift in Sources */,
 				7C81458229BA879B00E1B856 /* AlertBuilder.swift in Sources */,
 				7C81457A29B6180300E1B856 /* UserManager.swift in Sources */,
+				7C7D541329BE087F00E23106 /* StepperView.swift in Sources */,
 				7C81457829B60E4B00E1B856 /* UserViewController.swift in Sources */,
 				7C5B2B7729AF5820008DEBA5 /* TextFieldView.swift in Sources */,
 				7C85E5D329B12C5600C0646A /* ValueTableViewCell.swift in Sources */,
+				7C7D540D29BE04F000E23106 /* DetailViewController.swift in Sources */,
 				7C5B2B7929AF58BC008DEBA5 /* PropertyWrappers.swift in Sources */,
 				7C85E5CE29B1131C00C0646A /* DetailTaskViewController.swift in Sources */,
 				7C9E49F129AF41FE0012D9C1 /* User.swift in Sources */,
