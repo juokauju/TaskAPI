@@ -8,16 +8,26 @@
 import UIKit
 
 class LoginViewController: UIViewController {
+    @UsesAutoLayout
+    private var label = UILabel()
     
-    @UsesAutoLayout private var label = UILabel()
-    @UsesAutoLayout private var textFieldStackView = UIStackView()
+    @UsesAutoLayout
+    private var textFieldStackView = UIStackView()
     
     private weak var usernameTextField: TextFieldView!
     private weak var passwordTextField: TextFieldView!
-    @UsesAutoLayout private var logButton = UIButton()
-    @UsesAutoLayout private var questionStackView = UIStackView()
-    @UsesAutoLayout private var questionLabel = UILabel()
-    @UsesAutoLayout private var changeViewButton = UIButton()
+    
+    @UsesAutoLayout
+    private var logButton = UIButton()
+    
+    @UsesAutoLayout
+    private var questionStackView = UIStackView()
+    
+    @UsesAutoLayout
+    private var questionLabel = UILabel()
+    
+    @UsesAutoLayout
+    private var changeViewButton = UIButton()
     
     private var isScreenLogin = true
 
@@ -43,8 +53,11 @@ extension LoginViewController {
     }
     
     private func setupTextFieldStackView() {
-        @UsesAutoLayout var usernameTextField = TextFieldView(title: "Username:", placeholder: "Enter username")
-        @UsesAutoLayout var passwordTextField = TextFieldView(title: "Password:", placeholder: "Enter password")
+        @UsesAutoLayout
+        var usernameTextField = TextFieldView(title: "Username:", placeholder: "Enter username")
+        @UsesAutoLayout
+        var passwordTextField = TextFieldView(title: "Password:", placeholder: "Enter password")
+        
         self.usernameTextField = usernameTextField
         self.passwordTextField = passwordTextField
         
@@ -53,7 +66,9 @@ extension LoginViewController {
         
         textFieldStackView.addArrangedSubview(usernameTextField)
         textFieldStackView.addArrangedSubview(passwordTextField)
+        
         view.addSubview(textFieldStackView)
+        
         NSLayoutConstraint.activate([
             textFieldStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             textFieldStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
@@ -68,10 +83,12 @@ extension LoginViewController {
         config.buttonSize = .large
         config.baseBackgroundColor = .black
         config.cornerStyle = .large
+        
         logButton.configuration = config
-    
         logButton.addTarget(self, action: #selector(logButtonTapped), for: .primaryActionTriggered)
+        
         view.addSubview(logButton)
+        
         NSLayoutConstraint.activate([
             logButton.topAnchor.constraint(equalToSystemSpacingBelow: textFieldStackView.bottomAnchor, multiplier: 5),
             logButton.leftAnchor.constraint(equalTo: textFieldStackView.leftAnchor, constant: 40),
@@ -88,9 +105,12 @@ extension LoginViewController {
         
         questionStackView.axis = .horizontal
         questionStackView.spacing = 4
+        
         questionStackView.addArrangedSubview(questionLabel)
         questionStackView.addArrangedSubview(changeViewButton)
+        
         view.addSubview(questionStackView)
+        
         NSLayoutConstraint.activate([
             questionStackView.topAnchor.constraint(equalToSystemSpacingBelow: logButton.bottomAnchor, multiplier: 6),
             questionStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)

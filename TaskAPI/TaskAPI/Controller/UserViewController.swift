@@ -48,8 +48,13 @@ class UserViewController: UIViewController {
         addBarItem.tintColor = .systemRed
     }
     
+    private func logoutUser() {
+        NotificationCenter.default.post(name: .logout, object: nil)
+    }
+    
     @objc private func addBarButtonTapped(_ sender: UIBarButtonItem) {
         print("op")
+        logoutUser()
         // alert action sheet y/n
         // delete user
         // if error, show error alert

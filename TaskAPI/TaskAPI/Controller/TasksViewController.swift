@@ -107,8 +107,7 @@ extension TasksViewController: UITableViewDelegate {
         
         guard let task = tasks?[indexPath.row] else { return }
         
-        let detailVC = DetailTaskViewController(task: task)
-        detailVC.delegate = self
+        let detailVC = DetailViewController(task: task)
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -239,28 +238,5 @@ extension TasksViewController {
               let userInfo = UserManager.userInfo else { return }
         let task = TaskResponse(id: nil, title: title, description: description, estimateMinutes: minutes, loggedTime: 0, isDone: false, assigneeInfo: userInfo)
         newTask = task
-    }
-}
-
-// MARK: - DetailTaskViewControllerDelegate
-extension TasksViewController: DetailTaskViewControllerDelegate {
-    func update(with task: TaskResponse) -> NetworkError? {
-        //        let updateTaskRequest = UpdateTaskRequest(title: task.title,
-        //                                                  description: task.description,
-        //                                                  estimateMinutes: task.estimateMinutes,
-        //                                                  assigneeId: task.assigneeInfo.id,
-        //                                                  loggedTime: task.loggedTime,
-        //                                                  isDone: task.isDone)
-        //
-        //        service.update(with: updateTaskRequest) { result in
-        //            switch result {
-        //            case .success(let taskId):
-        //                print(taskId)
-        //                return nil
-        //            case.failure(let error):
-        //                return error
-        //            }
-        //        }
-        return nil
     }
 }
