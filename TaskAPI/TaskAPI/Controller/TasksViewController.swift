@@ -22,7 +22,7 @@ class TasksViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,7 +33,7 @@ class TasksViewController: UIViewController {
 
 // MARK: - Setup view
 extension TasksViewController {
-    private func setup() {
+    private func setupView() {
         title = "Tasks"
         view.backgroundColor = .secondarySystemBackground
         

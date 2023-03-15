@@ -1,15 +1,13 @@
 //
-//  StepperTableViewCell.swift
+//  StepperView.swift
 //  TaskAPI
 //
-//  Created by Justina Siaulyte on 2023-03-02.
+//  Created by Justina Siaulyte on 2023-03-12.
 //
 
 import UIKit
 
-class StepperTableViewCell: UITableViewCell {
-
-    static let reuseId = "StepperTableViewCell"
+class StepperView: UIView {
     
     @UsesAutoLayout var titleLabel = UILabel()
     @UsesAutoLayout var valueLabel = UILabel()
@@ -17,8 +15,8 @@ class StepperTableViewCell: UITableViewCell {
     
     var valueChangedHandler: ((Int) -> Void)?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: StepperTableViewCell.reuseId)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupView()
     }
     
@@ -26,23 +24,27 @@ class StepperTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: 350, height: 45)
+    }
 }
 
-extension StepperTableViewCell {
+extension StepperView {
     private func setupView() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(valueLabel)
-        contentView.addSubview(stepper)
+        backgroundColor = .systemBackground
+        addSubview(titleLabel)
+        addSubview(valueLabel)
+        addSubview(stepper)
         
         NSLayoutConstraint.activate([
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
             
-            valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.rightAnchor.constraint(equalTo: stepper.leftAnchor, constant: -20),
+            valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            valueLabel.rightAnchor.constraint(equalTo: stepper.leftAnchor, constant: -16),
             
-            stepper.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stepper.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20)
+            stepper.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stepper.rightAnchor.constraint(equalTo: rightAnchor, constant: -16)
         ])
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
@@ -54,7 +56,7 @@ extension StepperTableViewCell {
     }
 }
 
-extension StepperTableViewCell {
+extension StepperView {
     func configure(with title: String, value: Int, valueChangedHandler: ((Int) -> Void)?) {
         titleLabel.text = title
         valueLabel.text = "\(value)"
@@ -62,3 +64,4 @@ extension StepperTableViewCell {
         self.valueChangedHandler = valueChangedHandler
     }
 }
+

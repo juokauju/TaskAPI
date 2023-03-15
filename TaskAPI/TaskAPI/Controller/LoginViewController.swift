@@ -23,13 +23,13 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        setupView()
     }
 }
 
 // MARK: - View Setup
 extension LoginViewController {
-    private func setup() {
+    private func setupView() {
         view.backgroundColor = .systemBlue
         
         label.text = "TaskAPI"
