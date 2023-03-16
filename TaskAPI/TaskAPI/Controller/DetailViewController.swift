@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol DetailViewControllerDelegate: NSObject{
+    func didTapAddBarButton()
+}
+
 class DetailViewController: UIViewController {
+    
+    weak var delegate: DetailViewControllerDelegate?
     
     @UsesAutoLayout var stackView = UIStackView()
     @UsesAutoLayout var updateButton = UIButton()
@@ -44,7 +50,7 @@ extension DetailViewController {
         view.addSubview(updateButton)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 35),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor),
             
@@ -146,7 +152,8 @@ extension DetailViewController {
 
 extension DetailViewController {
     @objc private func addBarButtonTapped(_ sender: UIBarButtonItem) {
-
+        navigationController?.popViewController(animated: true)
+        delegate?.didTapAddBarButton()
     }
     
     @objc private func updateButtonTapped(_ sender: UIButton) {

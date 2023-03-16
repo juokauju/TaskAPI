@@ -52,7 +52,7 @@ extension TasksViewController {
     private func addTableViewConstraints() {
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -108,6 +108,7 @@ extension TasksViewController: UITableViewDelegate {
         guard let task = tasks?[indexPath.row] else { return }
         
         let detailVC = DetailViewController(task: task)
+        detailVC.delegate = self
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -238,5 +239,11 @@ extension TasksViewController {
               let userInfo = UserManager.userInfo else { return }
         let task = TaskResponse(id: nil, title: title, description: description, estimateMinutes: minutes, loggedTime: 0, isDone: false, assigneeInfo: userInfo)
         newTask = task
+    }
+}
+
+extension TasksViewController: DetailViewControllerDelegate {
+    func didTapAddBarButton() {
+        showAddNewTaskAlert()
     }
 }
