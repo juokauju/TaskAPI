@@ -45,14 +45,17 @@ extension TasksViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .systemFill
+        tableView.backgroundColor = .secondarySystemBackground
+        tableView.layer.borderWidth = 1.0
+        tableView.layer.borderColor = UIColor.systemGray4.cgColor
+        
         addTableViewConstraints()
     }
     
     private func addTableViewConstraints() {
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -62,6 +65,7 @@ extension TasksViewController {
     private func setupNavigationBar() {
         let scrollEdgeAppearance = UINavigationBarAppearance()
         scrollEdgeAppearance.backgroundColor = .lightText
+        scrollEdgeAppearance.shadowColor = .clear
         
         navigationController?.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
         setupAddNavigationBarItem()
@@ -139,7 +143,7 @@ extension TasksViewController {
             return
         }
         
-        TaskAPIService().getTasksForUser(id: userId) { [weak self] result in
+        TaskAPIService.shared.getTasksForUser(id: userId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let tasks):
@@ -160,7 +164,7 @@ extension TasksViewController {
                                       estimateMinutes: newTask.estimateMinutes,
                                       assigneeId: newTask.assigneeInfo.id)
         
-        TaskAPIService().post(task: taskRequest) { [weak self] result in
+        TaskAPIService.shared.post(task: taskRequest) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let taskResponse):
@@ -175,7 +179,7 @@ extension TasksViewController {
     }
     
     private func deleteTask(withId: Int, completion: @escaping (Bool) -> Void) {
-        TaskAPIService().deleteTask(withId: withId) { [weak self] result in
+        TaskAPIService.shared.deleteTask(withId: withId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -205,7 +209,7 @@ extension TasksViewController {
                                  message: "Backend error presented",
                                  messageTwo: nil,
                                  messageThree: nil)
-        alert.showAlertWithOK(action: nil)
+        alert.showAlertWithOK()
     }
     
     private func showAddNewTaskAlert() {
@@ -227,7 +231,7 @@ extension TasksViewController {
                                  message: "Task completed",
                                  messageTwo: nil,
                                  messageThree: nil)
-        alert.showAlertWithOK(action: nil)
+        alert.showAlertWithOK()
     }
     
     private func createNewTaskFrom(array: [String]) {

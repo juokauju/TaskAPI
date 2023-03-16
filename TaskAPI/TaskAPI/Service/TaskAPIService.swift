@@ -31,9 +31,16 @@ enum NetworkError: Error {
     case badUrl
     case httpRequestError
     case networkFailure
+    case wrongId
 }
 
 class TaskAPIService {
+    
+    // Singleton
+    static let shared = TaskAPIService()
+    private init() { }
+    
+    
     let resource = TaskAPIResource()
     
     private let decoder = JSONDecoder()

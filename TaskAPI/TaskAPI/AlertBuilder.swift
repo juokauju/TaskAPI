@@ -13,10 +13,10 @@ struct AlertBuilder {
     let title: String?
     let message: String?
     let messageTwo: String?
-    let messageThree: String? 
+    let messageThree: String?
 
     
-    func showAlertWithOK(action: (() -> Void)?) {
+    func showAlertWithOK(action: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if let action = action {
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
@@ -31,11 +31,10 @@ struct AlertBuilder {
     
     func showYesNoActionSheet(action: @escaping () -> Void) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: "No", style: .default))
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
             action()
         }))
-        
-        alert.addAction(UIAlertAction(title: "No", style: .cancel))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         viewController.present(alert, animated: true)

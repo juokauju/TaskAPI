@@ -182,7 +182,7 @@ extension LoginViewController {
     }
     
     private func login(_ user: UserAuthenticationRequest) {
-        TaskAPIService().login(user: user) { [weak self] result in
+        TaskAPIService.shared.login(user: user) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let userResponse):
@@ -199,7 +199,7 @@ extension LoginViewController {
     }
     
     private func register(_ user: UserAuthenticationRequest) {
-        TaskAPIService().register(user: user) { [weak self] result in
+        TaskAPIService.shared.register(user: user) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let userResponse):
@@ -233,12 +233,12 @@ extension LoginViewController {
     
     private func showLoginErrorAlert() {
         let alert = AlertBuilder(viewController: self, title: "Invalid login!", message: "User credentials are incorrect. Please try again or register", messageTwo: nil, messageThree: nil)
-        alert.showAlertWithOK(action: nil)
+        alert.showAlertWithOK()
     }
     
     private func showErrorAlert() {
         let alert = AlertBuilder(viewController: self, title: "Error!", message: "Backend error presented", messageTwo: nil, messageThree: nil)
-        alert.showAlertWithOK(action: nil)
+        alert.showAlertWithOK()
     }
 }
 
